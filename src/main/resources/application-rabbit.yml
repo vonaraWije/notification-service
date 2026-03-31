@@ -1,0 +1,11 @@
+spring:
+  rabbitmq:
+    listener:
+      simple:
+        auto-startup: true
+      direct:
+        auto-startup: true
+
+notification:
+  messaging:
+    enabled: true

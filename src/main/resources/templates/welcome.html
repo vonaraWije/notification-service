@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Welcome to Classpicker</title>
+</head>
+<body style="margin:0;padding:0;background-color:#f4f6f8;font-family:Arial,sans-serif;color:#1f2937;">
+<table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="padding:24px 0;">
+    <tr>
+        <td align="center">
+            <table role="presentation" width="600" cellspacing="0" cellpadding="0" style="background:#ffffff;border:1px solid #e5e7eb;border-radius:8px;overflow:hidden;">
+                <tr>
+                    <td style="background:#111827;color:#ffffff;padding:16px 24px;font-size:18px;font-weight:bold;">
+                        Classpicker
+                    </td>
+                </tr>
+                <tr>
+                    <td style="padding:24px;line-height:1.6;">
+                        <p style="margin:0 0 12px;">Hi <span th:text="${name}">User</span>,</p>
+                        <p style="margin:0 0 12px;">Welcome to Classpicker. Your account has been created successfully.</p>
+                        <p style="margin:0;">Thanks,<br/>Classpicker Team</p>
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+</table>
+</body>
+</html>
+

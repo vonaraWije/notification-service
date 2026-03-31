@@ -1,0 +1,50 @@
+spring:
+  application:
+    name: notification-service
+  profiles:
+    default: local
+  rabbitmq:
+    host: ${RABBITMQ_HOST:localhost}
+    port: ${RABBITMQ_PORT:5672}
+    username: ${RABBITMQ_USER:guest}
+    password: ${RABBITMQ_PASS:guest}
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: vonarawijethunge@gmail.com
+    password: gqcs sgpj khii podk
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+
+resend:
+  api:
+    key: re_99dWVPq3_JBjNMfYBeY8FpHcM9cJhfyw9
+    base-url: https://api.resend.com
+  from:
+    email: ${RESEND_FROM_EMAIL:no-reply@classpicker.com}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,metrics
+
+resilience4j:
+  circuitbreaker:
+    instances:
+      resendEmail:
+        slidingWindowSize: 10
+        minimumNumberOfCalls: 5
+        failureRateThreshold: 50
+        waitDurationInOpenState: 30s
+        permittedNumberOfCallsInHalfOpenState: 3
+      resendBatchEmail:
+        slidingWindowSize: 10
+        minimumNumberOfCalls: 5
+        failureRateThreshold: 50
+        waitDurationInOpenState: 30s
+        permittedNumberOfCallsInHalfOpenState: 3

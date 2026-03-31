@@ -1,0 +1,25 @@
+spring:
+  datasource:
+    url: jdbc:h2:mem:notificationdb;MODE=PostgreSQL;DB_CLOSE_DELAY=-1
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.H2Dialect
+  rabbitmq:
+    listener:
+      simple:
+        auto-startup: false
+      direct:
+        auto-startup: false
+
+resend:
+  api:
+    key: test-key
+    base-url: https://api.resend.com
+  from:
+    email: no-reply@test.local

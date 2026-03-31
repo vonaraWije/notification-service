@@ -1,0 +1,218 @@
+{
+  "info": {
+    "name": "Notification Service - Batch Email API",
+    "_postman_id": "batch-notification-service-api",
+    "description": "Batch email sending with Resend and internal templates",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Batch Emails - Mixed Templates",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"emails\": [\n    {\n      \"to\": \"user1@example.com\",\n      \"subject\": \"Order Confirmation - Resend Template\",\n      \"templateType\": \"RESEND\",\n      \"templateId\": \"order-confirmation\",\n      \"data\": {\n        \"PRODUCT\": \"Vintage Macintosh\",\n        \"PRICE\": 1500,\n        \"name\": \"Alice\"\n      }\n    },\n    {\n      \"to\": \"user2@example.com\",\n      \"subject\": \"Welcome to Classpicker\",\n      \"templateType\": \"INTERNAL\",\n      \"template\": \"<html><body><h1>Welcome {{name}}!</h1><p>Your account has been created successfully.</p></body></html>\",\n      \"data\": {\n        \"name\": \"Bob\"\n      }\n    },\n    {\n      \"to\": \"user3@example.com\",\n      \"subject\": \"Invoice #12345\",\n      \"templateType\": \"RESEND\",\n      \"templateId\": \"invoice-template\",\n      \"data\": {\n        \"INVOICE_ID\": \"12345\",\n        \"AMOUNT\": 999,\n        \"DUE_DATE\": \"2026-04-15\"\n      }\n    }\n  ]\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/notifications/batch/emails",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "notifications",
+            "batch",
+            "emails"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Batch Notifications - Full Payload",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"notifications\": [\n    {\n      \"type\": \"WELCOME\",\n      \"channel\": \"EMAIL\",\n      \"recipient\": \"newuser@example.com\",\n      \"subject\": \"Welcome to Our Platform\",\n      \"templateType\": \"RESEND\",\n      \"templateId\": \"welcome-template\",\n      \"data\": {\n        \"PLATFORM_NAME\": \"Classpicker\",\n        \"ACTIVATION_LINK\": \"https://app.example.com/activate\"\n      },\n      \"metadata\": {\n        \"eventId\": \"evt-welcome-001\"\n      }\n    },\n    {\n      \"type\": \"RESET_PASSWORD\",\n      \"channel\": \"EMAIL\",\n      \"recipient\": \"user@example.com\",\n      \"subject\": \"Reset Your Password\",\n      \"templateType\": \"INTERNAL\",\n      \"template\": \"<html><body><h2>Password Reset Request</h2><p>Click <a href='{{resetLink}}'>here</a> to reset your password</p></body></html>\",\n      \"data\": {\n        \"resetLink\": \"https://app.example.com/reset?token=abc123\"\n      },\n      \"metadata\": {\n        \"eventId\": \"evt-reset-001\"\n      }\n    },\n    {\n      \"type\": \"NOTIFICATION\",\n      \"channel\": \"EMAIL\",\n      \"recipient\": \"subscriber@example.com\",\n      \"subject\": \"New Class Available\",\n      \"templateType\": \"RESEND\",\n      \"templateId\": \"notification-template\",\n      \"data\": {\n        \"CLASS_NAME\": \"Python 101\",\n        \"INSTRUCTOR\": \"John Doe\",\n        \"START_DATE\": \"2026-04-01\"\n      },\n      \"metadata\": {\n        \"eventId\": \"evt-notification-001\"\n      }\n    }\n  ]\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/notifications/batch/send",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "notifications",
+            "batch",
+            "send"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Batch Emails - Large Template Variables",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"emails\": [\n    {\n      \"to\": \"customer1@example.com\",\n      \"subject\": \"Order Summary\",\n      \"templateType\": \"RESEND\",\n      \"templateId\": \"detailed-order\",\n      \"data\": {\n        \"ORDER_ID\": \"ORD-123456\",\n        \"CUSTOMER_NAME\": \"John Smith\",\n        \"ITEMS_COUNT\": 5,\n        \"SUBTOTAL\": 249.99,\n        \"TAX\": 19.75,\n        \"SHIPPING\": 10,\n        \"TOTAL\": 279.74,\n        \"DELIVERY_DATE\": \"2026-03-30\",\n        \"TRACKING_NUMBER\": \"TRK123456789\"\n      }\n    },\n    {\n      \"to\": \"customer2@example.com\",\n      \"subject\": \"Your Bill Payment Confirmation\",\n      \"templateType\": \"RESEND\",\n      \"templateId\": \"payment-receipt\",\n      \"data\": {\n        \"PAYMENT_ID\": \"PAY-987654\",\n        \"AMOUNT\": 150.00,\n        \"PAYMENT_METHOD\": \"Credit Card\",\n        \"TIMESTAMP\": \"2026-03-26T02:10:00Z\",\n        \"STATUS\": \"Completed\"\n      }\n    }\n  ]\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/notifications/batch/emails",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "notifications",
+            "batch",
+            "emails"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Batch Emails - Internal Templates Only",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"emails\": [\n    {\n      \"to\": \"admin@example.com\",\n      \"subject\": \"Daily Report\",\n      \"templateType\": \"INTERNAL\",\n      \"template\": \"<h2>Daily Report</h2><p>Total users: {{userCount}}</p><p>New signups: {{newSignups}}</p>\",\n      \"data\": {\n        \"userCount\": 1250,\n        \"newSignups\": 15\n      }\n    },\n    {\n      \"to\": \"manager@example.com\",\n      \"subject\": \"Sales Update\",\n      \"templateType\": \"INTERNAL\",\n      \"template\": \"<h2>Sales Report - {{month}}</h2><p>Revenue: ${{revenue}}</p><p>Conversion Rate: {{conversionRate}}%</p>\",\n      \"data\": {\n        \"month\": \"March 2026\",\n        \"revenue\": \"45000\",\n        \"conversionRate\": \"3.5\"\n      }\n    }\n  ]\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/notifications/batch/emails",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "notifications",
+            "batch",
+            "emails"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Batch Emails - Error Handling Test (Missing Template)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"emails\": [\n    {\n      \"to\": \"user@example.com\",\n      \"subject\": \"Test Email\",\n      \"templateType\": \"RESEND\",\n      \"templateId\": \"non-existent-template\",\n      \"data\": {}\n    }\n  ]\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/notifications/batch/emails",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "notifications",
+            "batch",
+            "emails"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Batch Emails - Error Handling Test (Empty List)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"emails\": []\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/notifications/batch/emails",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "notifications",
+            "batch",
+            "emails"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Batch Emails - Error Handling Test (Exceeds Limit)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"emails\": [\n    {\n      \"to\": \"user1@example.com\",\n      \"subject\": \"Email 1\",\n      \"templateType\": \"INTERNAL\",\n      \"template\": \"Test\",\n      \"data\": {}\n    },\n    {\n      \"to\": \"user2@example.com\",\n      \"subject\": \"Email 2\",\n      \"templateType\": \"INTERNAL\",\n      \"template\": \"Test\",\n      \"data\": {}\n    }\n  ]\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/notifications/batch/emails?limit=101",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "notifications",
+            "batch",
+            "emails"
+          ],
+          "query": [
+            {
+              "key": "limit",
+              "value": "101"
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8080"
+    }
+  ]
+}
