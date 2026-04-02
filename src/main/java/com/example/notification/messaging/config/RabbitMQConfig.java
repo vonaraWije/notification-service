@@ -25,6 +25,7 @@ public class RabbitMQConfig {
 
 	public static final String NOTIFICATION_EXCHANGE = "notification.exchange";
 	public static final String EMAIL_QUEUE = "notification.email.queue";
+	public static final String EXTERNAL_EMAIL_QUEUE = "email.queue";
 	public static final String EMAIL_DLQ = "notification.email.dlq";
 	public static final String EMAIL_ROUTING_PATTERN = "notification.email.*";
 	public static final String EMAIL_DLQ_ROUTING_KEY = "notification.email.dlq";
@@ -48,6 +49,14 @@ public class RabbitMQConfig {
 	}
 
 	@Bean
+	public Queue externalEmailQueue() {
+		Map<String, Object> args = new HashMap<>();
+		args.put("x-dead-letter-exchange", NOTIFICATION_EXCHANGE);
+		args.put("x-dead-letter-routing-key", EMAIL_DLQ_ROUTING_KEY);
+		return QueueBuilder.durable(EXTERNAL_EMAIL_QUEUE).withArguments(args).build();
+	}
+
+	@Bean
 	public Binding emailBinding() {
 		return BindingBuilder.bind(emailQueue())
 				.to(notificationExchange())
@@ -59,6 +68,13 @@ public class RabbitMQConfig {
 		return BindingBuilder.bind(emailDlq())
 				.to(notificationExchange())
 				.with(EMAIL_DLQ_ROUTING_KEY);
+	}
+
+	@Bean
+	public Binding externalEmailBinding() {
+		return BindingBuilder.bind(externalEmailQueue())
+				.to(notificationExchange())
+				.with(EMAIL_ROUTING_PATTERN);
 	}
 
 	@Bean

@@ -67,6 +67,9 @@ public class ResendBatchEmailProvider {
 			payloads.add(payload);
 		}
 
+		// Debug: log payloads sent to Resend so we can verify hosted URLs/variables
+		log.debug("Resend batch payloads: {}", payloads);
+
 		try {
 			Map<String, Object> response = resendRestClient.post()
 					.uri("/emails/batch")

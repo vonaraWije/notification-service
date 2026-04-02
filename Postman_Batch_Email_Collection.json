@@ -207,6 +207,70 @@
           ]
         }
       }
+    },
+    {
+      "name": "Batch Emails - Compact Payload (common + recipients)",
+      "event": [
+        {
+          "listen": "prerequest",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "// Converts compact payload { subject, templateType, templateId, recipients:[{email,name}] }",
+              "function loadCompact() {",
+              "  const env = pm.environment.get('compactPayload');",
+              "  if (env) {",
+              "    try { return JSON.parse(env); } catch(e) {}",
+              "  }",
+              "  try {",
+              "    const raw = pm.request && pm.request.body && pm.request.body.raw;",
+              "    if (raw) return JSON.parse(raw);",
+              "  } catch(e) {}",
+              "  return null;",
+              "}",
+              "const compact = loadCompact() || {",
+              "  subject: 'Welcome to Classpicker',",
+              "  templateType: 'RESEND',",
+              "  templateId: '21ae61be-eb6e-45b1-b8a5-88a89ab93942',",
+              "  recipients: []",
+              "};",
+              "const emails = (compact.recipients || []).map(r => ({",
+              "  to: r.email || r.to,",
+              "  subject: compact.subject,",
+              "  templateType: compact.templateType,",
+              "  templateId: compact.templateId,",
+              "  data: { name: r.name }",
+              "}));",
+              "pm.environment.set('batchBody', JSON.stringify({ emails }, null, 2));"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{{batchBody}}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/notifications/batch/emails",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "notifications",
+            "batch",
+            "emails"
+          ]
+        }
+      }
     }
   ],
   "variable": [

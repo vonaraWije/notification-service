@@ -11,9 +11,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.example.notification.entity.NotificationLog;
 import com.example.notification.messaging.config.RabbitMQConfig;
+import com.example.notification.messaging.util.RabbitQueueInspector;
 import com.example.notification.model.NotificationRequest;
 import com.example.notification.repository.NotificationLogRepository;
 import com.example.notification.service.NotificationService;
@@ -25,14 +27,17 @@ public class NotificationController {
 	private final NotificationService notificationService;
 	private final RabbitTemplate rabbitTemplate;
 	private final NotificationLogRepository notificationLogRepository;
+    private final RabbitQueueInspector rabbitQueueInspector;
 
 	public NotificationController(
 			NotificationService notificationService,
 			RabbitTemplate rabbitTemplate,
-			NotificationLogRepository notificationLogRepository) {
+			NotificationLogRepository notificationLogRepository,
+			RabbitQueueInspector rabbitQueueInspector) {
 		this.notificationService = notificationService;
 		this.rabbitTemplate = rabbitTemplate;
 		this.notificationLogRepository = notificationLogRepository;
+		this.rabbitQueueInspector = rabbitQueueInspector;
 	}
 
 	/**
@@ -91,7 +96,7 @@ public class NotificationController {
 					request);
 			return ResponseEntity.accepted().body(Map.of(
 					"status", "QUEUED",
-					"message", "Notification queued for processing",
+						"message", "Email received successfully",
 					"recipient", request.getRecipient()));
 		} catch (Exception ex) {
 			return ResponseEntity
@@ -124,5 +129,21 @@ public class NotificationController {
 		return ResponseEntity.ok(Map.of(
 				"status", "UP",
 				"service", "notification-service"));
+	}
+
+	/**
+	 * Get ready message count for the email queue (non-destructive)
+	 *
+	 * GET /api/notifications/queue/count
+	 */
+	@GetMapping("/queue/count")
+	public ResponseEntity<Map<String, Object>> getQueueCount(
+			@RequestParam(value = "name", required = false) String queueName) {
+		String queue = (queueName == null || queueName.isBlank()) ? RabbitMQConfig.EMAIL_QUEUE : queueName;
+		int ready = rabbitQueueInspector.getReadyMessageCount(queue);
+		return ResponseEntity.ok(Map.of(
+				"queue", queue,
+				"ready", ready
+		));
 	}
 }

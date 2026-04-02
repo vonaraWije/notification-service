@@ -17,10 +17,10 @@ spring:
   rabbitmq:
     listener:
       simple:
-        auto-startup: false
+        auto-startup: true
       direct:
-        auto-startup: false
+        auto-startup: true
 
 notification:
   messaging:
-    enabled: false
+    enabled: true
